@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-import logic from './cli.js'
+import logic from './cli.js';
 
-logic()
+logic();
