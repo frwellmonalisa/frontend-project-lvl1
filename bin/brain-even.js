@@ -1,21 +1,36 @@
 #!/usr/bin/env node
 
-import greetings, {printText, getUserInput} from './cli.js';
+import { printText, getUserInput } from './cli.js';
 
-const getRandomNumber = () => Math.floor(Math.random() * 101); 
+const getRandomNumber = () => Math.floor(Math.random() * 101);
 
 const isEven = (num) => num % 2 === 0;
 
-const isCorrectAnswer = (number, answer) => {
-  const rightAnswer = isEven(number) ? 'yes' : 'no';
-  if (answer !== 'yes' || answer !== 'no') printText(`'${answer}' is wrong answer ;(. Correct answer was '${rightAnswer}'`);
-  return answer === rightAnswer ? 'Correct!' : printText(`'${answer}' is wrong answer ;(. Correct answer was '${rightAnswer}'`);
-};
+const getRightAnswer = (number) => (isEven(number) ? 'yes' : 'no');
 
-greetings();
+const isCorrectAnswer = (correctAnswer, userAnswer) => correctAnswer === userAnswer;
+
+printText('Welcome to the Brain Games!');
+const userName = getUserInput('May I have your name?');
+printText(`Hello, ${userName}!`);
 printText('Answer "yes" if the number is even, otherwise answer "no".');
-const randomNumber = getRandomNumber();
-printText(`Question: ${randomNumber}`);
-const userAnswer = getUserInput('Your answer: ');
 
-isCorrectAnswer(randomNumber, userAnswer);
+const correctAnswersWinCount = 3;
+let userCorrectAnswersCount = 0;
+
+while (userCorrectAnswersCount !== correctAnswersWinCount) {
+  const randomNumber = getRandomNumber();
+  const correctAnswer = getRightAnswer(randomNumber);
+  printText(`Question: ${randomNumber}`);
+  const userAnswer = getUserInput('Your answer: ');
+  if (isCorrectAnswer(correctAnswer, userAnswer)) {
+    printText('Correct!');
+    userCorrectAnswersCount += 1;
+  } else {
+    printText(`'${userAnswer}' is wrong answer ;(. Correct answer was '${correctAnswer}'`);
+    printText(`Let's try again, ${userName}!`);
+    break;
+  }
+}
+
+if (userCorrectAnswersCount === correctAnswersWinCount) printText(`Congratulations, ${userName}!`);
